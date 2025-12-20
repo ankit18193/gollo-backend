@@ -91,6 +91,10 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+    
+    const clientURL = process.env.NODE_ENV === 'production'
+      ? "https://gollo-frontend.vercel.app"
+      : "http://localhost:3001";
 
     
     return res.status(200).json({

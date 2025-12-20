@@ -9,6 +9,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const BACKEND_URL = process.env.NODE_ENV === 'production' 
+  ? "https://gollo-backend.onrender.com" 
+  : "http://localhost:5000";
+
 
 const handleSocialAuth = async (provider, profile, done) => {
   try {
@@ -58,7 +62,9 @@ if (process.env.GOOGLE_CLIENT_ID) {
   passport.use(new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `/api/auth/google/callback`
+      callbackURL: `${BACKEND_URL}/api/auth/google/callback`,
+      scope: ['user.read']
+
     }, (accessToken, refreshToken, profile, done) => handleSocialAuth("google", profile, done))
   );
 }
@@ -68,7 +74,7 @@ if (process.env.MICROSOFT_CLIENT_ID) {
   passport.use(new MicrosoftStrategy({
       clientID: process.env.MICROSOFT_CLIENT_ID,
       clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
-      callbackURL: "/api/auth/microsoft/callback",
+      callbackURL: `${BACKEND_URL}/api/auth/microsoft/callback`,
       scope: ['user.read']
     }, (accessToken, refreshToken, profile, done) => handleSocialAuth("microsoft", profile, done))
   );
@@ -79,7 +85,8 @@ if (process.env.GITHUB_CLIENT_ID) {
   passport.use(new GitHubStrategy({
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "/api/auth/github/callback"
+      callbackURL: `${BACKEND_URL}/api/auth/github/callback`,
+      scope:['user.read']
     }, (accessToken, refreshToken, profile, done) => handleSocialAuth("github", profile, done))
   );
 }
